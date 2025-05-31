@@ -5,14 +5,13 @@ import (
 	"math/rand"
 	"net/http"
 )
- 
 
 type Quote struct {
 	Quote  string `json:"quote" binding:"required"`
 	Author string `json:"author" binding:"required"`
 }
 
-// Так как по заданию не требуется особых условий, а именно разрешено хранить в памяти, 
+// Так как по заданию не требуется особых условий, а именно разрешено хранить в памяти,
 // то логику работы с БД я реализовал по сути здесь аналог /storage
 
 var (
@@ -41,8 +40,11 @@ func DeleteQuote(id int) (Quote, error) { //coveraged tests
 
 func RandomQuote() (Quote, error) { //coveraged tests
 	var quote Quote
+	if len(Quotes) == 0 {
+		return quote, fmt.Errorf("quote not exists")
+	}
 	randID := rand.Intn(len(Quotes))
-	if randID >= len(Quotes) || randID < 0{
+	if randID >= len(Quotes) || randID < 0 {
 		return quote, fmt.Errorf("number of quotes: %d", len(Quotes))
 	}
 	return Quotes[randID], nil
